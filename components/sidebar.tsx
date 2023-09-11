@@ -28,8 +28,8 @@ const routes = [
     color: "text-sky-500",
   },
   {
-    label: "Conversion",
-    href: "/conversion",
+    label: "Conversation",
+    href: "/conversation",
     icon: MessageSquare,
     color: "text-pink-300",
   },

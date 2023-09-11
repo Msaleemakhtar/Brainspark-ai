@@ -1,3 +1,5 @@
+"use client"
+
 import { Card } from "@/components/ui/card";
 import {
   ArrowRight,
@@ -11,11 +13,12 @@ import {
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import {useRouter} from "next/navigation"
 
 const tools = [
   {
-    label: "Conversion",
-    href: "/conversion",
+    label: "Conversation",
+    href: "/conversation",
     icon: MessageSquare,
     color: "text-pink-300",
     bgcolor: "bg-violet-500/10",
@@ -52,6 +55,8 @@ const tools = [
 ];
 
 export default function DashboardPage() {
+
+  const router = useRouter();
   return (
     <div>
       {/* Main heading */}
@@ -71,6 +76,7 @@ export default function DashboardPage() {
       <div className="px-4 md:px-20 lg:px-32 space-y-4">
         {tools.map((tool) => (
           <Card
+          onClick = {() => router.push(tool.href)}
             key={tool.href}
             className="p-4 border-black/5 cursor-pointer hover:shadow-md flex items-center justify-between transition"
           >
