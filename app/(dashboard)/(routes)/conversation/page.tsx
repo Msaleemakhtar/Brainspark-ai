@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import{Empty} from "@/components/empty"
+import{Loader} from "@/components/loader"
 
 import { ChatCompletionMessage } from "openai/resources/chat";
 
@@ -108,6 +109,11 @@ setMessages((current)=>[...current, userMessage, response.data])
         </div>
         {/* Message contents to be displayed */}
         <div className = "space-y-4 mt-4">
+          {isLoading && (
+            <div className = "p-8 rounded-lg w-full flex items-center justify-center bg-muted">
+              <Loader/>
+            </div>
+          )}
           {messages.length===0 &&  !isLoading && (
          <Empty label = "No conversation started yet"/>
           )}
