@@ -5,10 +5,8 @@ import {
   ArrowRight,
   CodeIcon,
   ImageIcon,
-  LayoutDashboard,
   MessageSquare,
   MusicIcon,
-  Settings,
   VideoIcon,
 } from "lucide-react";
 
