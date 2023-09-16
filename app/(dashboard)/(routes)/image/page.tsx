@@ -1,29 +1,30 @@
 "use client";
 
 import * as z from "zod";
-import { Image} from "lucide-react";
+import { ImageIcon, Download} from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image"
 
 
 import Heading from "@/components/heading";
-import { formSchema } from "./constant";
+import { amountOption, resolutionOptions, formSchema } from "./constant";
 import { Form, FormField, FormItem, FormControl } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Empty } from "@/components/empty";
 import { Loader } from "@/components/loader";
 import { cn } from "@/lib/utils";
-import { UserAavatar } from "@/components/user-avatar";
-import { BotAvatar } from "@/components/bot-avatar";
+import {Card, CardFooter} from "@/components/ui/card"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 
 const ImagePage = () => {
 
-  const [images, setimages]= useState<string[]>([])
+  const [images, setImages]= useState<string[]>([])
 
 
   const router = useRouter();
@@ -32,6 +33,8 @@ const ImagePage = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       prompt: "",
+      amount:"1",
+      resolution:"256x256"
     },
   });
 
@@ -39,12 +42,11 @@ const ImagePage = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-    
+    setImages([])
+      const response = await axios.post("api/image", values);
 
-      const response = await axios.post("api/image", {
-        messages: images,
-      });
-    
+    const urls = response.data.map((image:{url:string})=>image.url)
+    setImages(urls)
       form.reset();
     } catch (error: any) {
       console.log(error);
@@ -60,7 +62,7 @@ const ImagePage = () => {
       <Heading
         title="Image Generation"
         description="Turn your text prompt into image"
-        icon={Image}
+        icon={ImageIcon}
         iconColor="text-pink-700"
         bgColor="bg-pink-700/10"
       />
@@ -77,20 +79,81 @@ const ImagePage = () => {
               <FormField
                 name="prompt"
                 render={({ field }) => (
-                  <FormItem className="col-span-12 lg:col-span-10">
+                  <FormItem className="col-span-12 lg:col-span-6">
                     <FormControl className="m-0 p-0">
                       <Input
                         className="border-0 outline-none 
                         focus-visible:ring-0 
                         focus-visible:ring-transparen"
-                        placeholder="Prompt is required"
+                        placeholder="A pink elephant walking on the road"
                         disabled={isLoading}
                         {...field}
                       />
                     </FormControl>
                   </FormItem>
                 )}
+              
               />
+                <FormField
+                control ={form.control}
+                name = "amount"
+                render = {({field})=>(
+                  <FormItem className = "col-span-12 lg:col-span-2">    
+                  <Select
+                  disabled={isLoading}
+                  onValueChange={field.onChange}
+                  value={field.value}
+                  defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue defaultValue={field.value}/>
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {amountOption.map((option)=>(
+                        <SelectItem key={option.value}
+                        value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+
+                    </SelectContent>
+
+                  </Select>
+                  </FormItem>
+                )}
+                />
+                <FormField
+                control ={form.control}
+                name = "resolution"
+                render = {({field})=>(
+                  <FormItem className = "col-span-12 lg:col-span-2">    
+                  <Select
+                  disabled={isLoading}
+                  onValueChange={field.onChange}
+                  value={field.value}
+                  defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue defaultValue={field.value}/>
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {resolutionOptions.map((option)=>(
+                        <SelectItem key={option.value}
+                        value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+
+                    </SelectContent>
+
+                  </Select>
+                  </FormItem>
+                )}
+                />
               <Button
                 className="col-span-12 lg:col-span-2 w-full"
                 disabled={isLoading}
@@ -102,17 +165,48 @@ const ImagePage = () => {
             </form>
           </Form>
         </div>
-        {/* Message contents to be displayed */}
+        {/* Images  to be displayed here */}
         <div className="space-y-4 mt-4">
           {isLoading && (
-            <div className="p-8 rounded-lg w-full flex items-center justify-center bg-muted">
+            <div className="p-20">
               <Loader />
             </div>
           )}
           {images.length === 0 && !isLoading && (
-            <Empty label="No conversation started yet" />
+            <Empty label="No image generated yet" />
           )}
-        <div>image will be rendered here</div>
+        <div className ="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-8">
+          {images.map((src)=>(
+            <Card 
+            key ={src}
+            className = "rounded-lg overflow-hidden"> 
+            
+            <div className = "relative aspect-square">
+              <Image
+              alt = "image"
+              fill
+              src = {src}
+              />
+
+            </div>
+
+            <CardFooter className = "p-2">
+              <Button
+              onClick = {()=>window.open(src)}
+              variant= "secondary"
+              className= "w-full"
+              >
+
+                <Download className = "h-4 w-4 mr-2"/>
+              </Button>
+
+
+            </CardFooter>
+            
+            </Card>
+          ))}
+          
+          </div>
         </div>
       </div>
     </div>
