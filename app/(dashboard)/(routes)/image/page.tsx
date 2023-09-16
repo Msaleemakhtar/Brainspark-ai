@@ -1,11 +1,10 @@
 "use client";
 
 import * as z from "zod";
-import { MessageSquare } from "lucide-react";
+import { Image} from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import { ChatCompletionMessage } from "openai/resources/chat";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -22,8 +21,10 @@ import { UserAavatar } from "@/components/user-avatar";
 import { BotAvatar } from "@/components/bot-avatar";
 
 
-const ConversationPage = () => {
-  const [messages, setMessages] = useState<ChatCompletionMessage[]>([]);
+const ImagePage = () => {
+
+  const [images, setimages]= useState<string[]>([])
+
 
   const router = useRouter();
 
@@ -38,17 +39,12 @@ const ConversationPage = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      const userMessage: ChatCompletionMessage = {
-        role: "user",
-        content: values.prompt,
-      };
+    
 
-      const newMessages = [...messages, userMessage];
-
-      const response = await axios.post("api/conversation", {
-        messages: newMessages,
+      const response = await axios.post("api/image", {
+        messages: images,
       });
-      setMessages((current) => [...current, userMessage, response.data]);
+    
       form.reset();
     } catch (error: any) {
       console.log(error);
@@ -62,11 +58,11 @@ const ConversationPage = () => {
       {/* heading--- imported from components */}
 
       <Heading
-        title="Conversation"
-        description="The smartest AI model"
-        icon={MessageSquare}
-        iconColor="text-violet-500"
-        bgColor="bg-violet-500/10"
+        title="Image Generation"
+        description="Turn your text prompt into image"
+        icon={Image}
+        iconColor="text-pink-700"
+        bgColor="bg-pink-700/10"
       />
 
       {/* form-----used from react-hook-form  */}
@@ -113,30 +109,14 @@ const ConversationPage = () => {
               <Loader />
             </div>
           )}
-          {messages.length === 0 && !isLoading && (
+          {images.length === 0 && !isLoading && (
             <Empty label="No conversation started yet" />
           )}
-          <div className="flex flex-col-reverse gap-y-4">
-            {messages.map((message) => (
-              <div
-                key={message.content}
-                className={cn(
-                  "p-8 w-full flex items-start gap-x-8 rounded-lg",
-                  message.role === "user"
-                    ? "bg-white border border-black/10"
-                    : "bg-muted"
-                )}
-              >
-                {message.role === "user" ? <UserAavatar /> : <BotAvatar />}
-                <p className="text-sm">{message.content}</p>
-                
-              </div>
-            ))}
-          </div>
+        <div>image will be rendered here</div>
         </div>
       </div>
     </div>
   );
 };
 
-export default ConversationPage;
+export default ImagePage;
