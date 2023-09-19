@@ -1,7 +1,7 @@
 "use client";
 
 import * as z from "zod";
-import {Music } from "lucide-react";
+import {VideoIcon} from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
@@ -18,8 +18,8 @@ import { Empty } from "@/components/empty";
 import { Loader } from "@/components/loader";
 
 
-const MusicPage = () => {
-  const [music, setMusic] = useState<string>();
+const VideoPage = () => {
+  const [video, setVideo] = useState<string>();
 
   const router = useRouter();
 
@@ -36,11 +36,11 @@ const MusicPage = () => {
     try {
      
 
-   setMusic(undefined)
+   setVideo(undefined)
 
-      const response = await axios.post("api/music", values)
+      const response = await axios.post("api/video", values)
       
-      setMusic(response.data.audio);
+      setVideo(response.data[0]);
       form.reset();
     } catch (error: any) {
       console.log(error);
@@ -54,11 +54,11 @@ const MusicPage = () => {
       {/* heading--- imported from components */}
 
       <Heading
-        title="Music Generation"
-        description="Turn your prompt into audio music"
-        icon={Music}
-        iconColor="text-emerald-500"
-        bgColor="bg-emerald-500/10"
+        title="Video Generation"
+        description="Turn your prompt into video"
+        icon={VideoIcon}
+        iconColor="text-orange-700"
+        bgColor="bg-orange-700/10"
       />
 
       {/* form-----used from react-hook-form  */}
@@ -105,15 +105,15 @@ const MusicPage = () => {
               <Loader />
             </div>
           )}
-          {!music && !isLoading && (
-            <Empty label="No music generated" />
+          {!video && !isLoading && (
+            <Empty label="No video generated" />
           )}
          
-         {music && (
-          <audio controls className="w-full mt-8">
-            <source src={music}/>
+         {video && (
+          <video controls className="w-full aspect-video mt-8 rounded-lg border bg-black ">
+            <source src={video}/>
             
-          </audio>
+          </video>
          )}
           
         </div>
@@ -122,4 +122,4 @@ const MusicPage = () => {
   );
 };
 
-export default MusicPage;
+export default VideoPage;
