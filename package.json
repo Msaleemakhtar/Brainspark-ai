@@ -11,13 +11,10 @@
 <<<<<<< HEAD
     "postinstall": "prisma generate"
 =======
-    "generate": "drizzle-kit generate:pg",
-    "migrate": "drizzle-kit push:pg"
->>>>>>> b1008f831cb959461d813c633d0e99375f721e65
+  
+
 =======
-    "generate": "drizzle-kit generate:pg",
-    "migrate": "drizzle-kit push:pg"
->>>>>>> b1008f831cb959461d813c633d0e99375f721e65
+
   },
   "dependencies": {
     "@clerk/nextjs": "^4.23.5",
@@ -58,11 +55,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
     "prisma": "^5.3.1"
-=======
-    "drizzle-kit": "^0.19.13"
->>>>>>> b1008f831cb959461d813c633d0e99375f721e65
-=======
-    "drizzle-kit": "^0.19.13"
->>>>>>> b1008f831cb959461d813c633d0e99375f721e65
+
   }
 }
