@@ -67,7 +67,7 @@ const routes = [
 ];
 
 interface SidebarProp {
-  apiLimitCount: number;
+  apiLimitCount: number | undefined;
 }
 
 const Sidebar = ({ apiLimitCount = 0 }: SidebarProp) => {

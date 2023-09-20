@@ -1,13 +1,22 @@
 "use client";
 
+
+import { useEffect, useState } from "react";
 import { Menu } from "lucide-react";
+
+
 
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import Sidebar from "@/components/sidebar";
-import { useEffect, useState } from "react";
 
-const Mobilesidebar = () => {
+
+
+ interface MobileSidebarProps{
+  apiLimitCount:number| undefined
+ }
+
+const Mobilesidebar =  ({apiLimitCount}:MobileSidebarProps) => {
 
   // To prevent the hydration errors
   const[isMounted, setIsMounted]= useState(false)
@@ -28,7 +37,7 @@ const Mobilesidebar = () => {
       </SheetTrigger>
 
       <SheetContent side = "left" className="p-0">
-        <Sidebar />
+        <Sidebar apiLimitCount={apiLimitCount} />
       </SheetContent>
     </Sheet>
   );
