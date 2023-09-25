@@ -25,6 +25,7 @@ export async function GET() {
         customer: userSubscription.stripeCustomerId,
         return_url: settingsUrl,
       });
+  
       return new NextResponse(JSON.stringify({ url: stripeSession.url }));
     }
 
@@ -34,7 +35,7 @@ export async function GET() {
       payment_method_types: ["card"],
       mode: "subscription",
       billing_address_collection: "auto",
-      customer_email: user.emailAddresses[0].emailAddress, // from clerk
+      customer_email: user.emailAddresses[0].emailAddress, 
       line_items: [
         {
           price_data: {
