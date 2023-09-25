@@ -4,6 +4,8 @@ import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
 
+import {checksubscription} from "@/lib/subscription"
+
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
 });
@@ -35,9 +37,11 @@ const openai = new OpenAI({
     }
     const freeTrial = await checkApiLimit();
 
-    if(!freeTrial){
-     return new NextResponse("Free trial has expired",{status:403})
-    }
+    const isPro = await checksubscription()
+
+     if(!freeTrial && !isPro){
+      return new NextResponse("Free trial has expired",{status:403})
+     }
 
     const response = await openai.images.generate({
     prompt,
@@ -45,7 +49,9 @@ const openai = new OpenAI({
     size:resolution,
     
   });
-  increaseApiLimit()
+  if(!isPro){
+    await increaseApiLimit()
+  }
 
  return NextResponse.json(response.data)
     

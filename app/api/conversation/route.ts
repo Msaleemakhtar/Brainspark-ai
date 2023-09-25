@@ -6,6 +6,7 @@ import OpenAI from "openai";
 
 
 import { increaseApiLimit, checkApiLimit } from "@/lib/api-limits";
+import {checksubscription} from "@/lib/subscription"
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
@@ -31,8 +32,9 @@ console.log("id", userId)
       return new NextResponse("Messages are required", {status:400})
     }
      const freeTrial = await checkApiLimit();
+     const isPro = await checksubscription()
 
-     if(!freeTrial){
+     if(!freeTrial && !isPro){
       return new NextResponse("Free trial has expired",{status:403})
      }
 
@@ -41,7 +43,11 @@ console.log("id", userId)
       model: "gpt-3.5-turbo",
     
   });
-  await increaseApiLimit()
+
+  if(!isPro){
+    await increaseApiLimit()
+  }
+
 
  return NextResponse.json(response.choices[0].message)
     
