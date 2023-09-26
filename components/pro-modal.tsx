@@ -76,7 +76,7 @@ export const ProModal = () => {
      
      window.location.href = response.data.url;
     } catch (error) {
-    toat.error("Something went wrong")
+    toast.error("Something went wrong")
     }finally{
       setLoading(false)
     }
