@@ -8,7 +8,7 @@ import axios from "axios";
 import { ChatCompletionMessage } from "openai/resources/chat";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-
+import {toast} from "react-hot-toast"
 
 import Heading from "@/components/heading";
 import { formSchema } from "./constant";
@@ -56,6 +56,8 @@ const ConversationPage = () => {
     } catch (error: any) {
       if(error?.response?.status === 403){
         proModal.onOpen()
+      }else{
+        toast.error("Something Went Wrong")
       }
     } finally {
       router.refresh();

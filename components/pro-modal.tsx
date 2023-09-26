@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import { useState } from "react";
-
+import {toast} from "react-hot-toast"
 import {
     Check,
     CodeIcon,
@@ -76,7 +76,7 @@ export const ProModal = () => {
      
      window.location.href = response.data.url;
     } catch (error) {
-      console.log(error, "STRIPE_CLIENT_ERROR")
+    toat.error("Something went wrong")
     }finally{
       setLoading(false)
     }

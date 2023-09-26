@@ -9,7 +9,7 @@ import { ChatCompletionMessage } from "openai/resources/chat";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import ReactMarkdown from "react-markdown";
-
+import {toast} from "react-hot-toast"
 
 import Heading from "@/components/heading";
 import { formSchema } from "./constant";
@@ -26,6 +26,7 @@ import { useProModal } from "@/hooks/use-pro-modal";
 
 
 const CodePage = () => {
+ 
   const proModal = useProModal()
   const [messages, setMessages] = useState<ChatCompletionMessage[]>([]);
 
@@ -42,6 +43,7 @@ const CodePage = () => {
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
+
       const userMessage: ChatCompletionMessage = {
         role: "user",
         content: values.prompt,
@@ -57,6 +59,8 @@ const CodePage = () => {
     } catch (error: any) {
       if(error?.response?.status === 403){
         proModal.onOpen()
+      }else{
+        toast.error("Something went wrong")
       }
     } finally {
       router.refresh();
